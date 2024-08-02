@@ -38,6 +38,3 @@ ResolveConverter is a C++ tool that converts all video files in a directory to D
 
 ## Contributions
 Contributions are welcome! Open an issue or submit a pull request for improvements or new features.
-```
-
-This concise description and README file provide essential information about the project while being brief and to the point.
