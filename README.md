@@ -1,4 +1,4 @@
-```
+
 # Resolve Format Tool
 
 This tool converts all video files in a specified directory into a format that can be imported into DaVinci Resolve. It creates a new directory named `[inputdirectory name] Resolve Format` and places the converted videos in that directory.
@@ -53,4 +53,3 @@ Feel free to fork this repository, create a new branch, and submit a pull reques
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
