@@ -26,27 +26,19 @@ std::vector<std::pair<std::string, std::string>> getSupportedFormats(const std::
     std::vector<std::pair<std::string, std::string>> formats;
     if (os == "Windows") {
         formats.push_back({"ProRes", "mov"});
-        formats.push_back({"DNxHD", "mxf"});
-        formats.push_back({"DNxHR", "mxf"});
-        formats.push_back({"H.264", "mp4"});
-        formats.push_back({"H.265", "mp4"});
+        formats.push_back({"DNxHD", "mov"});
+        formats.push_back({"DNxHR", "mov"});
     } else if (os == "macOS") {
         formats.push_back({"ProRes", "mov"});
-        formats.push_back({"DNxHD", "mxf"});
-        formats.push_back({"DNxHR", "mxf"});
-        formats.push_back({"H.264", "mov"});
-        formats.push_back({"H.265", "mov"});
+        formats.push_back({"DNxHD", "mov"});
+        formats.push_back({"DNxHR", "mov"});
     } else if (os == "Linux") {
-        formats.push_back({"ProRes", "mov"});
-        formats.push_back({"DNxHD", "mxf"});
-        formats.push_back({"DNxHR", "mxf"});
-        formats.push_back({"H.264", "mp4"});
-        formats.push_back({"H.265", "mp4"});
+        formats.push_back({"DNxHR", "mov"});
     }
     return formats;
 }
 
-void convertToResolveFormat(const fs::path& inputDir, const std::string& format, const std::string& extension) {
+void convertToResolveFormat(const fs::path& inputDir, const std::string& format, const std::string& extension, const std::string& os) {
     // Create the output directory
     fs::path outputDir = inputDir.string() + " Resolve Format";
     if (!fs::exists(outputDir)) {
@@ -60,15 +52,18 @@ void convertToResolveFormat(const fs::path& inputDir, const std::string& format,
             fs::path outputFile = outputDir / inputFile.filename();
             outputFile.replace_extension(extension);
 
-            // Use a more compatible codec if needed
-            std::string codecOptions = "";
-            if (extension == "mxf") {
-                codecOptions = "-c:v dnxhr -profile:v dnxhr_hq";
-            } else {
-                codecOptions = "-c:v copy -c:a copy";
+            std::string command;
+
+            if (os == "Windows" || os == "macOS") {
+                if (format == "ProRes") {
+                    command = "ffmpeg -i \"" + inputFile.string() + "\" -c:v prores_ks -profile:v 3 -vendor apl0 -c:a pcm_s16le \"" + outputFile.string() + "\"";
+                } else if (format == "DNxHD" || format == "DNxHR") {
+                    command = "ffmpeg -i \"" + inputFile.string() + "\" -c:v dnxhd -profile:v dnxhr_hq -pix_fmt yuv422p -c:a pcm_s16le \"" + outputFile.string() + "\"";
+                }
+            } else if (os == "Linux" && format == "DNxHR") {
+                command = "ffmpeg -i \"" + inputFile.string() + "\" -c:v dnxhd -profile:v dnxhr_hq -pix_fmt yuv422p -c:a pcm_s16le \"" + outputFile.string() + "\"";
             }
 
-            std::string command = "ffmpeg -i \"" + inputFile.string() + "\" " + codecOptions + " \"" + outputFile.string() + "\"";
             std::cout << "Executing: " << command << std::endl;
 
             int result = std::system(command.c_str());
@@ -122,7 +117,7 @@ int main(int argc, char* argv[]) {
         std::string selectedFormat = supportedFormats[selectedIndex - 1].first;
         std::string selectedExtension = supportedFormats[selectedIndex - 1].second;
 
-        convertToResolveFormat(inputDir, selectedFormat, selectedExtension);
+        convertToResolveFormat(inputDir, selectedFormat, selectedExtension, os);
 
     } catch (const std::invalid_argument& e) {
         std::cerr << "Invalid argument: " << e.what() << std::endl;
