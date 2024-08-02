@@ -23,11 +23,11 @@ ResolveConverter is a C++ program that converts video files in a directory to Da
    ```
 3. Compile the program:
    ```sh
-   g++ -std=c++17 -o convert_to_resolve convert_to_resolve.cpp
+   g++ -std=c++17 -o formatter formatter.cpp
    ```
 4. Run the program with the input directory as an argument:
    ```sh
-   ./convert_to_resolve /path/to/your/input_directory
+   ./formatter /path/to/your/input_directory
    ```
 
 ## Contributions
