@@ -32,4 +32,3 @@ ResolveConverter is a C++ program that converts video files in a directory to Da
 
 ## Contributions
 Contributions are welcome! Open an issue or submit a pull request for improvements or new features.
-```
